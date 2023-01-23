@@ -16,6 +16,7 @@ function geocode(search, token) {
             return res.json();
             // to get all the data from the request, comment out the following three lines...
         }).then(function(data) {
+
             return data.features[0].center;
         });
 }
@@ -34,6 +35,7 @@ function reverseGeocode(coordinates, token) {
 }
 
 const coordinatesGeocoder = function (query) {
+
     const matches = query.match(
         /^[ ]*(?:Lat: )?(-?\d+\.?\d*)[, ]+(?:Lng: )?(-?\d+\.?\d*)[ ]*$/i
     );
@@ -75,7 +77,9 @@ const coordinatesGeocoder = function (query) {
         geocodes.push(coordinateFeature(coord1, coord2));
         geocodes.push(coordinateFeature(coord2, coord1));
     }
+
     return geocodes;
+
 };
 
 map.addControl(
@@ -89,15 +93,43 @@ map.addControl(
     })
 );
 
+let lattitude = '';
+let longitude = '';
+
+$.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${28.3223}&lon=${75.199}&appid=${OPENWEATHER_API_KEY}`, {
+    units: "imperial"
+}).done(function(data) {
+    console.log(`${data.list[0].dt_txt}  weather`, data);
+});
+
+let sanAntonioCoords = geocode('San Antonio', MAPBOX_API_KEY).then(function (result){
+    console.log(result);
+});
+
+
+// $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${26.22}&lon=${12.234}&appid=${OPENWEATHER_API_KEY}`, {
+//     units: "imperial"
+// }).done(function(data) {
+//     $('#forecast_banner').setHTML(`<h1>${data.city.name}</h1><div>${data.list[0].dt_txt}</div><div>${data.list[0].main.temp} ${data.list[0].weather[0].description}</div>`);
+// });
+
 function pinThatAddress(address) {
     geocode(address, MAPBOX_API_KEY)
         .then(function (result) {
             const marker = new mapboxgl
                 .Marker();
+            lattitude = result[1];
+            longitude = result[0];
+
             marker.setLngLat(result);
             marker.addTo(map);
             let popup = new mapboxgl.Popup();
-            popup.setHTML(`<h1>${address}</h1>`);
+            $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lattitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}`, {
+                units: "imperial"
+            }).done(function(data) {
+                popup.setHTML(`<h1>${address}</h1><div>${data.list[0].dt_txt}</div><div>${data.list[0].main.temp} ${data.list[0].weather[0].description}</div>`);
+            });
+           ;
             marker.setPopup(popup);
             // map.setCenter(result);
             // map.setZoom(20);
@@ -105,3 +137,5 @@ function pinThatAddress(address) {
         console.log("Boom");
     });
 }
+
+pinThatAddress('Codeup')
