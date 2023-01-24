@@ -39,6 +39,12 @@ let rainy = "img/rainy_clouds.jpeg"
 let sunny = "img/mostly_sunny.jpeg"
 let cloudy = "img/partly_cloudy.jpeg"
 
+function upperCase(str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
 function searchLocation() {
     let searchInput = $('#search_bar')
     let input = searchInput.focus().val()
@@ -64,11 +70,11 @@ function searchLocation() {
                     .Marker();
                 marker.setLngLat(result);
                 marker.addTo(map);
-                $('#forecast_banner').html(`<div style=" color: white;"><h3>${data.city.name}</h3><h5>Current ${data.list[0].main.temp}</h5></div>`)
+                $('#forecast_banner').html(`<div style=" color: white;"><h3>${data.city.name}</h3><h6>Current ${data.list[0].main.temp} &#8457;</h6></div>`)
                 for (let i = 0; i <= 32; i ++) {
                     if(i % 8 === 0 || i === 0){
                         let date = new Date(data.list[i].dt_txt);
-                        $('#forecast_banner').append(`<div class="text-white pt-3 mx-2 border border-white border-2" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 200px; width: 160px;">${date.toDateString().substring(0,10)}<br> ${data.list[i].weather[0].description} <img src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
+                        $('#forecast_banner').append(`<div class="text-white pt-3 mx-2 border border-white border-2" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 200px; width: 160px;">${date.toDateString().substring(0,3)}, ${date.toDateString().substring(4,10)}<br> ${upperCase(data.list[i].weather[0].description)} <img src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
                     }
                 }
             } else {
@@ -98,12 +104,11 @@ geocode('san antonio', MAPBOX_API_KEY).then(function (result){
         if(data.list[0].weather[0].main === 'Clouds'){
             $('body').css('background-image', `url('${cloudy}')`)
         }
-        console.log(data)
-        $('#forecast_banner').html(`<div style="color: white;" ><h3>${data.city.name}</h3><h5>Current ${data.list[0].main.temp}</h5></div>`)
+        $('#forecast_banner').html(`<div style="color: white;" ><h3>${data.city.name}</h3><h6>Current ${data.list[0].main.temp} &#8457;</h6><h6>${upperCase(data.list[0].weather[0].description)}</h6></div>`)
         for (let i = 0; i < 40; i++) {
             if(i % 8 === 0 || i === 0){
                 let date = new Date(data.list[i].dt_txt);
-                $('#forecast_banner').append(`<div class="text-white pt-3 mx-2 border border-white border-2" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 200px; width: 160px;">${date.toDateString().substring(0,10)}<br> ${data.list[i].weather[0].description} <img src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
+                $('#forecast_banner').append(`<div class="text-white pt-2 mx-2 border border-white border-2" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 200px; width: 160px;">${date.toDateString().substring(0,3)}, ${date.toDateString().substring(4,10)}<br> ${upperCase(data.list[i].weather[0].description)} <img src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
             }
         }
     });
