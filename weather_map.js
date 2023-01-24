@@ -43,15 +43,25 @@ function searchLocation() {
             units: "imperial"
         }).done(function(data) {
             if(isNaN(input) === true){
+                // if(data.list[0].weather[0].main === 'Rain'){
+                //     $('#container').css('background-image', 'url("img/rainy_clouds.jpeg")')
+                // }
+                let rainy = "img/rainy_clouds.jpeg"
+                let sunny = `url("img/mostly_sunny.jpeg")`
+                let cloudy = `url("img/partly_cloudy.jpeg")`
+//left here
+                $('body').css('background-image', `url('${rainy}')`)
                 map.setCenter(result)
                 const marker = new mapboxgl
                     .Marker();
                 marker.setLngLat(result);
                 marker.addTo(map);
-                $('#forecast_banner').html(`<h1>${data.city.name}</h1>`)
-                for (let i = 0; i < 40; i ++) {
+                console.log(data.list);
+                $('#forecast_banner').html(`<h1>${data.city.name}</h1><h3>Current ${data.list[0].main.temp}</h3>`)
+                for (let i = 0; i <= 32; i ++) {
                     if(i % 8 === 0 || i === 0){
-                        $('#forecast_banner').append(`<div class="bg-dark text-white pt-3 mx-2" style="display: inline-block; height: 100px; width: 250px;">${data.list[i].dt_txt.substring(6,10)}<br>${data.list[i].main.temp} F<br>${data.list[i].weather[0].description}</div>`);
+                        let date = new Date(data.list[i].dt_txt);
+                        $('#forecast_banner').append(`<div class="bg-dark text-white pt-3 mx-2" style="display: inline-block; height: 100px; width: 250px;">${date.toDateString().substring(0, 7)} ${data.list[i].dt_txt.substring(6,10)}<br>${data.list[i].main.temp} F<br>${data.list[i].weather[0].description}</div>`);
                     }
                 }
             } else {
@@ -72,7 +82,8 @@ geocode('san antonio', MAPBOX_API_KEY).then(function (result){
     $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${result[1]}&lon=${result[0]}&appid=${OPENWEATHER_API_KEY}`, {
         units: "imperial"
     }).done(function(data) {
-        $('#forecast_banner').html(`<h1>${data.city.name}</h1>`)
+        console.log(data);
+        $('#forecast_banner').html(`<h1>${data.city.name}<h3>Current ${data.list[0].main.temp}</h3></h1>`)
         for (let i = 0; i < 40; i++) {
             if(i % 8 === 0 || i === 0){
                 $('#forecast_banner').append(`<div class="bg-dark text-white pt-3 mx-2" style="display: inline-block; height: 100px; width: 250px;">${data.list[i].dt_txt.substring(6,10)}<br>${data.list[i].main.temp} F<br> ${data.list[i].weather[0].description}</div>`);
