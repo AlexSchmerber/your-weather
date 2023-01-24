@@ -96,14 +96,23 @@ map.addControl(
 let lattitude = '';
 let longitude = '';
 
-$.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${28.3223}&lon=${75.199}&appid=${OPENWEATHER_API_KEY}`, {
-    units: "imperial"
-}).done(function(data) {
-    console.log(`${data.list[0].dt_txt}  weather`, data);
-});
 
-let sanAntonioCoords = geocode('San Antonio', MAPBOX_API_KEY).then(function (result){
-    console.log(result);
+
+
+
+geocode('San Antonio', MAPBOX_API_KEY).then(function (result){
+    $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${result[1]}&lon=${result[0]}&appid=${OPENWEATHER_API_KEY}`, {
+        units: "imperial"
+    }).done(function(data) {
+        $('#forecast_banner').html(`<h1>${data.city.name}</h1>`)
+        for (let i = 0; i <= 40; i ++) {
+            if(i % 8 === 0 || i === 0){
+                $('#forecast_banner').append(`<div class="bg-dark text-white pt-3 mx-2" style="display: inline-block; height: 100px; width: 250px;">${data.list[i].dt_txt.substring(6,10)}<br>${data.list[i].main.temp} F<br> ${data.list[i].weather[0].description}</div></div>`);
+            }
+
+        }
+
+    });
 });
 
 
