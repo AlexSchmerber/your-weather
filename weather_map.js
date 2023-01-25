@@ -34,6 +34,9 @@ function reverseGeocode(coordinates, token) {
         });
 }
 
+$('#zoom-select').change(function (event) {
+    map.setZoom(this.value)
+});
 
 let rainy = "img/rainy_clouds.jpeg"
 let sunny = "img/mostly_sunny.jpeg"
@@ -70,7 +73,13 @@ function searchLocation() {
                     .Marker();
                 marker.setLngLat(result);
                 marker.addTo(map);
-                $('#forecast_banner').html(`<div style=" color: white;"><h3>${data.city.name}</h3><h6>Current ${data.list[0].main.temp} &#8457;</h6></div>`)
+                $('#remove_pins').click(function () {
+                    marker.remove()
+                });
+                $('#return_pins').click(function () {
+                    marker.addTo(map);
+                });
+                $('#forecast_banner').html(`<div style="color: white;" ><h3>${data.city.name}</h3><h6>Current ${data.list[0].main.temp} &#8457;</h6><h6>${upperCase(data.list[0].weather[0].description)}</h6></div>`)
                 for (let i = 0; i <= 32; i ++) {
                     if(i % 8 === 0 || i === 0){
                         let date = new Date(data.list[i].dt_txt);
@@ -131,6 +140,12 @@ function pinThatAddress(address) {
 
             marker.setLngLat(result);
             marker.addTo(map);
+            $('#remove_pins').click(function () {
+                marker.remove()
+            });
+            $('#return_pins').click(function () {
+                marker.addTo(map);
+            });
             let popup = new mapboxgl.Popup();
             $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lattitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}`, {
                 units: "imperial"

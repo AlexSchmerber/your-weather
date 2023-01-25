@@ -9,14 +9,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <style>
         #map {
-            width: 420px;
-            height: 320px;
+            width: 520px;
+            height: 420px;
         }
         #forecast_banner {
             width: 100%;
             height: 160px;
         }
         body {
+            font-family: sans-serif, Beirut;
             background-size: cover;
         }
 
@@ -30,31 +31,45 @@
     </a>
 </nav>
 <container id="container">
-    <div class="text-center mb-2 pt-3 text-light" style="height: 330px; background-color: rgba(0, 0, 0, 0.3);" id="forecast_banner"></div>
-    <div class="text-center mb-2 text-white d-flex justify-content-center align-items-center">
-        <div class="p-3 m-3" style="background-color: rgba(0, 0, 0, 0.3);">
-            <label for="search_bar">Search Location</label>
-            <br>
-            <input style="width: 200px; height: 30px;" type="text" id="search_bar">
+    <div class="text-center mb-2 pt-3 text-light" style="height: 360px; background-color: rgba(0, 0, 0, 0.3);" id="forecast_banner"></div>
+    <div class="text-center my-5 text-white d-flex justify-content-center align-items-center">
+        <div class="p-3 m-3" style="background-color: rgba(0, 0, 0, 0.3); height: 420px; display: flex; flex-direction: column; ">
+            <div class="my-auto">
+                <label for="search_bar">Search Location</label>
+                <br>
+                <input style="width: 200px; height: 30px;" type="text" id="search_bar">
+            </div>
+            <div class="my-auto">
+                <button class="pe-2" style="font-size: 12px; z-index: 2; width: 100px; height: 30px; margin-bottom: 20px;" type="button" id="remove_pins">Remove Pins</button>
+                <button class="pe-4" style="font-size: 12px; width: 100px; height: 30px; margin-bottom: 20px;" type="button" id="return_pins">Return Pins</button>
+                <select  id="zoom-select"  style="padding: 2px 12px; margin-bottom: 20px;" id="zoom_select" class="form-select">
+                    <option id="zoom_option0" selected disabled>Change Zoom</option>
+                    <option id="zoom_option3" value="13">Close Zoom</option>
+                    <option id="zoom_option2"  value="8">Mid Zoom</option>
+                    <option id="zoom_option1" value="4">Far Zoom</option>
+                </select>
+            </div>
         </div>
         <div class="d-flex border border-dark border-5" id='map'></div>
     </div>
 </container>
-<footer class="d-flex bg-dark flex-wrap justify-content-between align-items-center py-3 mt-5 border-top">
+<footer style="margin-top: 150px;" class="d-flex bg-dark flex-wrap justify-content-between align-items-center py-3 border-top">
     <div class="col-md-4 d-flex align-items-center">
         <a href="/" class="mb-3 me-2 mb-md-0 text-light text-decoration-none lh-1">
             <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
         </a>
-        <span class="text-light">© 2021 Company, Inc</span>
+        <span class="text-light">© 2023 Your Weather, Inc</span>
     </div>
 
-    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
-        <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"></use></svg></a></li>
-        <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"></use></svg></a></li>
-        <li class="ms-3"><a class="text-muted" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#facebook"></use></svg></a></li>
+    <ul class="nav col-md-4 justify-content-end list-unstyled d-flex align-items-center">
+        <a href="#"><i class="fa-brands fa-twitter text-white p-1 fs-3"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram text-white p-2 fs-3"></i></a>
+        <a href="#"><i class="fa-brands fa-facebook text-white p-1 pe-4 fs-3"></i></a>
     </ul>
 </footer>
 
+<!--Font Awesome-->
+<script src="https://kit.fontawesome.com/80e95813b0.js" crossorigin="anonymous"></script>
 <!--jQuery JS-->
 <script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script>
 <!--Mapbox Style-->
