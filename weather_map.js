@@ -46,7 +46,7 @@ function upperCase(str) {
 
 
 let marker = new mapboxgl.Marker()
-    .setLngLat([-98.495141, 29.4246])
+    .setLngLat([-73.9866, 40.7306])
     .addTo(map);
 
 function searchLocation() {
@@ -100,7 +100,8 @@ $('#search_bar').keypress(function (e) {
 });
 
 
-geocode('san antonio', MAPBOX_API_KEY).then(function (result){
+geocode('New York', MAPBOX_API_KEY).then(function (result){
+    console.log(result);
     $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${result[1]}&lon=${result[0]}&appid=${OPENWEATHER_API_KEY}`, {
         units: "imperial"
     }).done(function(data) {
@@ -126,6 +127,45 @@ geocode('san antonio', MAPBOX_API_KEY).then(function (result){
         }
     });
 });
+
+const successCallback = (position) => {
+    map.setCenter([position.coords.longitude, position.coords.latitude])
+    marker.setLngLat([position.coords.longitude, position.coords.latitude]);
+
+    console.log(position.coords.longitude);
+    console.log(position.coords.latitude);
+    let lat = position.coords.latitude
+    let long = position.coords.longitude
+    $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${OPENWEATHER_API_KEY}`, {
+        units: "imperial"
+    }).done(function(data) {
+        if(data.list[0].weather[0].main === 'Rain'){
+            $('body').css('background-image', `url('${rainy}')`)
+        }
+        if(data.list[0].weather[0].main === 'Clear'){
+            $('body').css('background-image', `url('${sunny}')`)
+        }
+        if(data.list[0].weather[0].main === 'Clouds'){
+            $('body').css('background-image', `url('${cloudy}')`)
+        }
+        if(data.list[0].weather[0].description === 'Snow'){
+            $('body').css('background-image', `url('${rainy}')`)
+        }
+        $('#forecast_banner').html(`<div style="color: white;" ><h2>${data.city.name}</h2><h6>Current ${data.list[0].main.temp} &#8457;</h6><h6>${upperCase(data.list[0].weather[0].description)}</h6></div>`)
+        for (let i = 0; i < 40; i++) {
+            if(i % 8 === 0 || i === 0){
+                let date = new Date(data.list[i].dt_txt);
+                $('#forecast_banner').append(`<div class="text-white pt-3 mx-3 border border-white border-2 boxes" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 220px; width: 180px;">${date.toDateString().substring(0,3)}, ${date.toDateString().substring(4,10)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"> ${upperCase(data.list[i].weather[0].description)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"><img class="p-0 m-0" src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
+            }
+        }
+    });
+};
+
+const errorCallback = (error) => {
+    console.log(error);
+};
+
+navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
 
 map.addControl(new mapboxgl.NavigationControl());
 
