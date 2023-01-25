@@ -7,6 +7,10 @@
     <link href='https://api.mapbox.com/mapbox-gl-js/v2.12.0/mapbox-gl.css' rel='stylesheet'>
     <!--Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<!--    Google fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Abel&family=Anton&family=Roboto+Slab&display=swap" rel="stylesheet">
     <style>
         #map {
             width: 520px;
@@ -17,37 +21,30 @@
             height: 160px;
         }
         body {
-            font-family: sans-serif, Beirut;
+            font-family: 'Roboto Slab', serif;
             background-size: cover;
         }
-
+        .boxes:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 50px #969696, 0 0 25px #4b4b4b;
+        }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-light bg-dark border-bottom border-white ps-3">
-    <a class="navbar-brand text-white" href="#">
-<!--            <img src="" alt="" width="30" height="24" class="d-inline-block align-text-top">-->
+    <a class="navbar-brand text-white fs-2" href="#">
+        <i class="fa-sharp fa-solid fa-sun"></i>
         Your Weather
     </a>
 </nav>
 <container id="container">
-    <div class="text-center mb-2 pt-3 text-light" style="height: 360px; background-color: rgba(0, 0, 0, 0.3);" id="forecast_banner"></div>
+    <div class="text-center mb-2 pt-3 text-light mx-auto mt-5" style="height: 360px; width: 1200px; background-color: rgba(0, 0, 0, 0.3);" id="forecast_banner"></div>
     <div class="text-center my-5 text-white d-flex justify-content-center align-items-center">
-        <div class="p-3 m-3" style="background-color: rgba(0, 0, 0, 0.3); height: 420px; display: flex; flex-direction: column; ">
+        <div class="p-3 m-3" style="background-color: rgba(0, 0, 0, 0.2); height: 80px; display: flex; flex-direction: column; ">
             <div class="my-auto">
                 <label for="search_bar">Search Location City</label>
                 <br>
                 <input style="width: 200px; height: 30px;" type="text" id="search_bar">
-            </div>
-            <div class="my-auto">
-                <button class="pe-2" style="font-size: 12px; z-index: 2; width: 100px; height: 30px; margin-bottom: 20px;" type="button" id="remove_pins">Remove Pins</button>
-                <button class="pe-4" style="font-size: 12px; width: 100px; height: 30px; margin-bottom: 20px;" type="button" id="return_pins">Return Pins</button>
-                <select  id="zoom-select"  style="padding: 2px 12px; margin-bottom: 20px;" id="zoom_select" class="form-select">
-                    <option id="zoom_option0" selected disabled>Change Zoom</option>
-                    <option id="zoom_option3" value="13">Close Zoom</option>
-                    <option id="zoom_option2"  value="8">Mid Zoom</option>
-                    <option id="zoom_option1" value="4">Far Zoom</option>
-                </select>
             </div>
         </div>
         <div class="d-flex border border-dark border-5" id='map'></div>
@@ -62,7 +59,8 @@
     </div>
 
     <ul class="nav col-md-4 justify-content-end list-unstyled d-flex align-items-center">
-        <a href="#"><i class="fa-brands fa-twitter text-white p-1 fs-3"></i></a>
+        <a href="#"><i class="fa-brands fa-youtube text-white p-1  fs-3"></i></a>
+        <a href="#"><i class="fa-brands fa-twitter text-white p-2 fs-3"></i></a>
         <a href="#"><i class="fa-brands fa-instagram text-white p-2 fs-3"></i></a>
         <a href="#"><i class="fa-brands fa-facebook text-white p-1 pe-4 fs-3"></i></a>
     </ul>

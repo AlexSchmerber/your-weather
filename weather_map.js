@@ -34,10 +34,6 @@ function reverseGeocode(coordinates, token) {
         });
 }
 
-$('#zoom-select').change(function (event) {
-    map.setZoom(this.value)
-});
-
 let rainy = "img/rainy_clouds.jpeg"
 let sunny = "img/mostly_sunny.jpeg"
 let cloudy = "img/partly_cloudy.jpeg"
@@ -47,6 +43,11 @@ function upperCase(str) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
+
+
+let marker = new mapboxgl.Marker()
+    .setLngLat([-98.495141, 29.4246])
+    .addTo(map);
 
 function searchLocation() {
     let searchInput = $('#search_bar')
@@ -70,10 +71,8 @@ function searchLocation() {
                     $('body').css('background-image', `url('${rainy}')`)
                 }
                 map.setCenter(result)
-                const marker = new mapboxgl
-                    .Marker();
                 marker.setLngLat(result);
-                marker.addTo(map);
+
                 $('#remove_pins').click(function () {
                     marker.remove()
                 });
@@ -84,7 +83,7 @@ function searchLocation() {
                 for (let i = 0; i <= 32; i ++) {
                     if(i % 8 === 0 || i === 0){
                         let date = new Date(data.list[i].dt_txt);
-                        $('#forecast_banner').append(`<div class="text-white pt-3 mx-2 border border-white border-2" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 200px; width: 160px;">${date.toDateString().substring(0,3)}, ${date.toDateString().substring(4,10)}<br> ${upperCase(data.list[i].weather[0].description)}<br><img src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
+                        $('#forecast_banner').append(`<div class="text-white pt-3 mx-3 border border-white border-2 boxes" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 220px; width: 180px;">${date.toDateString().substring(0,3)}, ${date.toDateString().substring(4,10)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"> ${upperCase(data.list[i].weather[0].description)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"><img class="p-0 m-0" src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
                     }
                 }
             } else {
@@ -122,41 +121,52 @@ geocode('san antonio', MAPBOX_API_KEY).then(function (result){
         for (let i = 0; i < 40; i++) {
             if(i % 8 === 0 || i === 0){
                 let date = new Date(data.list[i].dt_txt);
-                $('#forecast_banner').append(`<div class="text-white pt-2 mx-2 border border-white border-2" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 200px; width: 160px;">${date.toDateString().substring(0,3)}, ${date.toDateString().substring(4,10)}<br> ${upperCase(data.list[i].weather[0].description)}<br><img src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
+                $('#forecast_banner').append(`<div class="text-white pt-3 mx-3 border border-white border-2 boxes" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 220px; width: 180px;">${date.toDateString().substring(0,3)}, ${date.toDateString().substring(4,10)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"> ${upperCase(data.list[i].weather[0].description)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"><img class="p-0 m-0" src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
             }
         }
     });
 });
 
-function pinThatAddress(address) {
-    geocode(address, MAPBOX_API_KEY)
-        .then(function (result) {
-            const marker = new mapboxgl
-                .Marker();
-            let lattitude = result[1];
-            let longitude = result[0];
+map.addControl(new mapboxgl.NavigationControl());
 
-            marker.setLngLat(result);
-            marker.addTo(map);
-            $('#remove_pins').click(function () {
-                marker.remove()
-            });
-            $('#return_pins').click(function () {
-                marker.addTo(map);
-            });
-            let popup = new mapboxgl.Popup();
-            $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lattitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}`, {
-                units: "imperial"
-            }).done(function(data) {
-                popup.setHTML(`<h1>${address}</h1><div>${data.list[0].dt_txt}</div><div>${data.list[0].main.temp} ${data.list[0].weather[0].description}</div>`);
-            });
-           ;
-            marker.setPopup(popup);
-            // map.setCenter(result);
-            // map.setZoom(20);
-        }).catch(function (error) {
-        console.log("Boom");
-    });
-}
+// function pinThatAddress(address) {
+//     geocode(address, MAPBOX_API_KEY)
+//         .then(function (result) {
+//             const marker = new mapboxgl
+//                 .Marker();
+//             marker.setLngLat(result);
+//             marker.addTo(map);
+//             $('#remove_pins').click(function () {
+//                 marker.remove()
+//             });
+//             $('#return_pins').click(function () {
+//                 marker.addTo(map);
+//             });
+//         }).catch(function (error) {
+//         console.log("Boom");
+//     });
+// }
 
-pinThatAddress('Codeup')
+// let lattitude = result[1];
+// let longitude = result[0];
+// let popup = new mapboxgl.Popup();
+// $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lattitude}&lon=${longitude}&appid=${OPENWEATHER_API_KEY}`, {
+//     units: "imperial"
+// }).done(function(data) {
+//     popup.setHTML(`<container class="text-black"><h1>${address}</h1></container>`);
+// });
+// marker.setPopup(popup);
+
+// geocode('San Antonio', MAPBOX_API_KEY)
+//     .then(function (result) {
+//         let marker = new mapboxgl
+//             .Marker();
+//         marker.setLngLat(result);
+//         marker.addTo(map);
+//         $('#remove_pins').click(function () {
+//             marker.remove()
+//         });
+//         $('#return_pins').click(function () {
+//             marker.addTo(map);
+//         });
+//     });
