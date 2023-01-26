@@ -21,22 +21,11 @@ function geocode(search, token) {
         });
 }
 
-function reverseGeocode(coordinates, token) {
-    const baseUrl = 'https://api.mapbox.com';
-    const endPoint = '/geocoding/v5/mapbox.places/';
-    return fetch(baseUrl + endPoint + coordinates.lng + "," + coordinates.lat + '.json' + "?" + 'access_token=' + token)
-        .then(function(res) {
-            return res.json();
-        })
-        // to get all the data from the request, comment out the following three lines...
-        .then(function(data) {
-            return data.features[0].place_name;
-        });
-}
-
 let rainy = "img/rainy_clouds.jpeg"
 let sunny = "img/mostly_sunny.jpeg"
 let cloudy = "img/partly_cloudy.jpeg"
+let clearNight = "img/clear_night.jpeg"
+let cloudyNight = "img/cloudy_night.jpeg"
 
 function upperCase(str) {
     return str.replace(/\w\S*/g, function(txt){
@@ -52,45 +41,43 @@ let marker = new mapboxgl.Marker()
 function searchLocation() {
     let searchInput = $('#search_bar')
     let input = searchInput.focus().val()
-    geocode(input, MAPBOX_API_KEY).then(function (result){
-        $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${result[1]}&lon=${result[0]}&appid=${OPENWEATHER_API_KEY}`, {
-            units: "imperial"
-        }).done(function(data) {
-            console.log(data);
-            if(isNaN(input) === true){
-                if(data.list[0].weather[0].main === 'Rain'){
+    if (/^[\.a-zA-Z0-9,!? ]*$/.test(input)) {
+        geocode(input, MAPBOX_API_KEY).then(function (result) {
+            $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${result[1]}&lon=${result[0]}&appid=${OPENWEATHER_API_KEY}`, {
+                units: "imperial"
+            }).done(function (data) {
+                console.log(data.list[0]);
+                if (data.list[0].weather[0].main === 'Rain') {
                     $('body').css('background-image', `url('${rainy}')`)
                 }
-                if(data.list[0].weather[0].main === 'Clear'){
+                if (data.list[0].weather[0].main === 'Clear' && data.list[0].weather[0].icon.includes('d')) {
                     $('body').css('background-image', `url('${sunny}')`)
                 }
-                if(data.list[0].weather[0].main === 'Clouds'){
+                if (data.list[0].weather[0].main === 'Clear' && data.list[0].weather[0].icon.includes('n')) {
+                    $('body').css('background-image', `url('${clearNight}')`)
+                }
+                if (data.list[0].weather[0].main === 'Clouds' && data.list[0].weather[0].icon.includes('d')) {
                     $('body').css('background-image', `url('${cloudy}')`)
                 }
-                if(data.list[0].weather[0].main === 'Snow'){
+                if (data.list[0].weather[0].main === 'Clouds' && data.list[0].weather[0].icon.includes('n')) {
+                    $('body').css('background-image', `url('${cloudyNight}')`)
+                }
+                if (data.list[0].weather[0].main === 'Snow') {
                     $('body').css('background-image', `url('${rainy}')`)
                 }
                 map.setCenter(result)
                 marker.setLngLat(result);
 
-                $('#remove_pins').click(function () {
-                    marker.remove()
-                });
-                $('#return_pins').click(function () {
-                    marker.addTo(map);
-                });
                 $('#forecast_banner').html(`<div style="color: white;" ><h2>${data.city.name}</h2><h6>Current ${data.list[0].main.temp} &#8457;</h6><h6>${upperCase(data.list[0].weather[0].description)}</h6></div>`)
-                for (let i = 0; i <= 32; i ++) {
-                    if(i % 8 === 0 || i === 0){
+                for (let i = 0; i <= 32; i++) {
+                    if (i % 8 === 0 || i === 0) {
                         let date = new Date(data.list[i].dt_txt);
-                        $('#forecast_banner').append(`<div class="text-white pt-3 mx-3 border border-white border-2 boxes" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 220px; width: 180px;">${date.toDateString().substring(0,3)}, ${date.toDateString().substring(4,10)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"> ${upperCase(data.list[i].weather[0].description)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"><img class="p-0 m-0" src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
+                        $('#forecast_banner').append(`<div class="text-white pt-3 mx-3 border border-white border-2 boxes" style="background-color: rgba(0, 0, 0, 0.4); font-size: 16px; display: inline-block; height: 220px; width: 180px;">${date.toDateString().substring(0, 3)}, ${date.toDateString().substring(4, 10)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"> ${upperCase(data.list[i].weather[0].description)}<hr style="width: 90%;" class="p-0 m-0 mx-auto"><img class="p-0 m-0" src="http://openweathermap.org/img/wn/${data.list[i].weather[0].icon}@2x.png" alt="weather image"><br>${data.list[i].main.temp} &#8457;</div>`);
                     }
                 }
-            } else {
-                console.log('invalid input');
-            }
+            });
         });
-    });
+    }
 };
 
 $('#search_bar').keypress(function (e) {
@@ -99,22 +86,28 @@ $('#search_bar').keypress(function (e) {
     }
 });
 
-
 geocode('New York', MAPBOX_API_KEY).then(function (result){
-    console.log(result);
+    map.setCenter([result[0], result[1]])
+    marker.setLngLat([result[0], result[1]]);
     $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${result[1]}&lon=${result[0]}&appid=${OPENWEATHER_API_KEY}`, {
         units: "imperial"
     }).done(function(data) {
-        if(data.list[0].weather[0].main === 'Rain'){
+        if (data.list[0].weather[0].main === 'Rain') {
             $('body').css('background-image', `url('${rainy}')`)
         }
-        if(data.list[0].weather[0].main === 'Clear'){
+        if (data.list[0].weather[0].main === 'Clear' && data.list[0].weather[0].icon.includes('d')) {
             $('body').css('background-image', `url('${sunny}')`)
         }
-        if(data.list[0].weather[0].main === 'Clouds'){
+        if (data.list[0].weather[0].main === 'Clear' && data.list[0].weather[0].icon.includes('n')) {
+            $('body').css('background-image', `url('${clearNight}')`)
+        }
+        if (data.list[0].weather[0].main === 'Clouds' && data.list[0].weather[0].icon.includes('d')) {
             $('body').css('background-image', `url('${cloudy}')`)
         }
-        if(data.list[0].weather[0].description === 'Snow'){
+        if (data.list[0].weather[0].main === 'Clouds' && data.list[0].weather[0].icon.includes('n')) {
+            $('body').css('background-image', `url('${cloudyNight}')`)
+        }
+        if (data.list[0].weather[0].main === 'Snow') {
             $('body').css('background-image', `url('${rainy}')`)
         }
 
@@ -137,16 +130,22 @@ const successCallback = (position) => {
     $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${OPENWEATHER_API_KEY}`, {
         units: "imperial"
     }).done(function(data) {
-        if(data.list[0].weather[0].main === 'Rain'){
+        if (data.list[0].weather[0].main === 'Rain') {
             $('body').css('background-image', `url('${rainy}')`)
         }
-        if(data.list[0].weather[0].main === 'Clear'){
+        if (data.list[0].weather[0].main === 'Clear' && data.list[0].weather[0].icon.includes('d')) {
             $('body').css('background-image', `url('${sunny}')`)
         }
-        if(data.list[0].weather[0].main === 'Clouds'){
+        if (data.list[0].weather[0].main === 'Clear' && data.list[0].weather[0].icon.includes('n')) {
+            $('body').css('background-image', `url('${clearNight}')`)
+        }
+        if (data.list[0].weather[0].main === 'Clouds' && data.list[0].weather[0].icon.includes('d')) {
             $('body').css('background-image', `url('${cloudy}')`)
         }
-        if(data.list[0].weather[0].description === 'Snow'){
+        if (data.list[0].weather[0].main === 'Clouds' && data.list[0].weather[0].icon.includes('n')) {
+            $('body').css('background-image', `url('${cloudyNight}')`)
+        }
+        if (data.list[0].weather[0].main === 'Snow') {
             $('body').css('background-image', `url('${rainy}')`)
         }
         $('#forecast_banner').html(`<div style="color: white;" ><h2>${data.city.name}</h2><h6>Current ${data.list[0].main.temp} &#8457;</h6><h6>${upperCase(data.list[0].weather[0].description)}</h6></div>`)
@@ -166,28 +165,6 @@ let userMapLocation = new mapboxgl.GeolocateControl({
     trackUserLocation: true,
     showUserHeading: true
 });
-
-map.on('load', () => {
-    map.addSource('radar', {
-        type: 'image',
-        url: 'https://docs.mapbox.com/mapbox-gl-js/assets/radar.gif',
-        coordinates: [
-            [-80.425, 46.437],
-            [-71.516, 46.437],
-            [-71.516, 37.936],
-            [-80.425, 37.936]
-        ]
-    });
-    map.addLayer({
-        id: 'radar-layer',
-        type: 'raster',
-        source: 'radar',
-        paint: {
-            'raster-fade-duration': 0
-        }
-    });
-});
-
 
 map.addControl(userMapLocation);
 userMapLocation.on('geolocate', function(e) {
@@ -255,17 +232,3 @@ map.addControl(new mapboxgl.NavigationControl());
 //     popup.setHTML(`<container class="text-black"><h1>${address}</h1></container>`);
 // });
 // marker.setPopup(popup);
-
-// geocode('San Antonio', MAPBOX_API_KEY)
-//     .then(function (result) {
-//         let marker = new mapboxgl
-//             .Marker();
-//         marker.setLngLat(result);
-//         marker.addTo(map);
-//         $('#remove_pins').click(function () {
-//             marker.remove()
-//         });
-//         $('#return_pins').click(function () {
-//             marker.addTo(map);
-//         });
-//     });
