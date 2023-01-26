@@ -175,16 +175,22 @@ userMapLocation.on('geolocate', function(e) {
     $.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}`, {
         units: "imperial"
     }).done(function(data) {
-        if(data.list[0].weather[0].main === 'Rain'){
+        if (data.list[0].weather[0].main === 'Rain') {
             $('body').css('background-image', `url('${rainy}')`)
         }
-        if(data.list[0].weather[0].main === 'Clear'){
+        if (data.list[0].weather[0].main === 'Clear' && data.list[0].weather[0].icon.includes('d')) {
             $('body').css('background-image', `url('${sunny}')`)
         }
-        if(data.list[0].weather[0].main === 'Clouds'){
+        if (data.list[0].weather[0].main === 'Clear' && data.list[0].weather[0].icon.includes('n')) {
+            $('body').css('background-image', `url('${clearNight}')`)
+        }
+        if (data.list[0].weather[0].main === 'Clouds' && data.list[0].weather[0].icon.includes('d')) {
             $('body').css('background-image', `url('${cloudy}')`)
         }
-        if(data.list[0].weather[0].description === 'Snow'){
+        if (data.list[0].weather[0].main === 'Clouds' && data.list[0].weather[0].icon.includes('n')) {
+            $('body').css('background-image', `url('${cloudyNight}')`)
+        }
+        if (data.list[0].weather[0].main === 'Snow') {
             $('body').css('background-image', `url('${rainy}')`)
         }
         $('#forecast_banner').html(`<div style="color: white;" ><h2>${data.city.name}</h2><h6>Current ${data.list[0].main.temp} &#8457;</h6><h6>${upperCase(data.list[0].weather[0].description)}</h6></div>`)
