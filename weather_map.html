@@ -15,31 +15,36 @@
         #map {
             width: 520px;
             height: 420px;
+            transition: 2s ease all;
         }
         #forecast_banner {
             width: 100%;
             height: 160px;
+            transition: 2s ease all;
         }
         body {
             font-family: 'Roboto Slab', serif;
             background-attachment: fixed;
             background-size: cover;
+            transition: 2s ease all;
         }
         .boxes:hover {
-            transform: scale(1.08);
+            position: relative;
+            top: 20px;
+            transform: scale(1.2);
             box-shadow: 0 0 50px #969696, 0 0 25px #4b4b4b;
         }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-light bg-dark border-bottom border-white ps-3">
-    <a class="navbar-brand text-white fs-2" href="#">
+    <a class="navbar-brand text-white fs-1" href="#">
         <i class="fa-sharp fa-solid fa-sun"></i>
         Your Weather
     </a>
 </nav>
 <container id="container">
-    <div class="text-center mb-2 pt-3 text-light mx-auto mt-5" style="height: 360px; width: 1200px; background-color: rgba(0, 0, 0, 0.3);" id="forecast_banner"></div>
+    <div class="text-center mb-2 pt-3 text-light mx-auto mt-5" style="height: 420px; width: 1200px; background-color: rgba(0, 0, 0, 0.3);" id="forecast_banner"></div>
     <div class="text-center my-5 text-white d-flex justify-content-center align-items-center">
         <div class="p-3 m-3 me-5" style="background-color: rgba(0, 0, 0, 0.2); height: 150px; display: flex; flex-direction: column; ">
             <div class="my-auto" style="width: 400px;">

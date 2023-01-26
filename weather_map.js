@@ -65,7 +65,7 @@ function searchLocation() {
                 if (data.list[0].weather[0].main === 'Snow') {
                     $('body').css('background-image', `url('${rainy}')`)
                 }
-                map.setCenter(result)
+                map.setCenter(result);
                 marker.setLngLat(result);
 
                 $('#forecast_banner').html(`<div style="color: white;" ><h2>${data.city.name}</h2><h6>Current ${data.list[0].main.temp} &#8457;</h6><h6>${upperCase(data.list[0].weather[0].description)}</h6></div>`)
