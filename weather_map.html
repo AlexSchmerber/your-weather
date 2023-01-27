@@ -43,7 +43,12 @@
         Your Weather
     </a>
 </nav>
-<container id="container">
+<div style="scale: 150%; margin-top: 80px;" class="text-center" id="load-spinner">
+    <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+<container id="container" class="d-none">
     <div class="text-center mb-2 pt-3 text-light mx-auto mt-5" style="height: 420px; width: 1200px; background-color: rgba(0, 0, 0, 0.3);" id="forecast_banner"></div>
     <div class="text-center my-5 text-white d-flex justify-content-center align-items-center">
         <div class="p-3 m-3 me-5" style="background-color: rgba(0, 0, 0, 0.2); height: 150px; display: flex; flex-direction: column; ">
@@ -56,7 +61,7 @@
         <div class="d-flex border border-dark border-5" id='map'></div>
     </div>
 </container>
-<footer style="margin-top: 150px;" class="d-flex bg-dark flex-wrap justify-content-between align-items-center py-3 border-top">
+<footer id="footer" style="margin-top: 150px;" class="d-flex bg-dark flex-wrap justify-content-between align-items-center py-3 border-top d-none">
     <div class="col-md-4 d-flex align-items-center">
         <a href="/" class="mb-3 me-2 mb-md-0 text-light text-decoration-none lh-1">
             <svg class="bi" width="30" height="24"><use xlink:href="#bootstrap"></use></svg>
