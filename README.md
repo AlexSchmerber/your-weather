@@ -1,10 +1,10 @@
 # Your Weather
 
-A responsive web site to empower users as individuals by providing weather information no matter where they are in the world!
+A responsive web site to empower users by providing weather information for wherever they are in the world!
 
 ## Description
 
-This site combines jQuery, a geocoding api, and a weathermapping api to provide information based on user inputs. The apis provide the information that translate to the page while the jQuery enables users to pinpoint what information they may require. 
+By using HTML, CSS, jQuery, AJAX, a Mapbox Geocoding API and the OpenWeatherMap API, Your Weather creates an all in one approach to collecting temperature and forecast information.
 
 ### How to Use
 
@@ -15,5 +15,13 @@ By simply searching by location in the search bar or dragging and location pin o
 
 Alex Schmerber
 
-## Acknowledgments
+## APIS and Styles
 
+#### Mapbox Geocoding
+https://www.mapbox.com/geocoding
+
+#### OpenWeatherMap API
+https://openweathermap.org/api
+
+#### Google Fonts
+https://fonts.google.com/
